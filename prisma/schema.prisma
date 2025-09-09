@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id  String  @id @default(cuid())
+  name  String
+  email String @unique
+  emailVerified DateTime?
+  image String?
+  accounts Account[]
+  sessions Session[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quizzes Quiz[]
+  profile Profile?
+  token String?
+  attempt Attempt[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@id([identifier, token])
+}
+
+model Profile{
+  id String @id @default(uuid())
+  user User @relation(fields: [userId],references: [id])
+  userId String @unique
+  name String
+}
+
+model Quiz{
+  id String @id @default(uuid())
+  title String
+  questions Question[]
+  createdBy User @relation(fields: [userId], references: [id])
+  userId String
+  totalTime Int @default(60)
+  totalMarks Decimal @default(100)
+  attempts Attempt[]
+}
+
+enum Status{
+  ATTEMPTED
+  NOT_ATTEMPTED
+  ATTEMPTING
+  CHECKING
+}
+
+model Attempt{
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  quiz Quiz @relation(fields: [quizId],references: [id])
+  quizId String
+  timeLeft Int @default(60)
+  marksObtained Decimal
+  status Status @default(NOT_ATTEMPTED)
+  answers UserAnswer[]
+}
+
+model Question{
+  id String @id @default(uuid())
+  quiz Quiz @relation(fields: [quizId],references: [id])
+  quizId String
+  que String
+  type Question_Type
+  options Option[]
+  marks Decimal @default(1)
+  answer UserAnswer[] 
+}
+
+enum Question_Type{
+  PARAGRAPH
+  MCQ
+}
+
+model Option{
+  id String @id @default(uuid())
+  text String
+  question Question @relation(fields: [queId],references: [id])
+  queId String
+  isCorrect Boolean @default(false)
+  answer UserAnswer[]
+}
+
+model UserAnswer {
+  id        String   @id @default(uuid())
+  attemptId String
+  attempt   Attempt  @relation(fields: [attemptId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  optionId   String?
+  option     Option?  @relation(fields: [optionId], references: [id])
+  answerText String?  // for paragraph answers
+}
+
+
