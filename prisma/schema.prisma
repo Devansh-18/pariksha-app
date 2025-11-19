@@ -15,19 +15,18 @@ datasource db {
 }
 
 model User {
-  id  String  @id @default(cuid())
-  name  String
-  email String @unique
+  id            String  @id @default(cuid())
+  name          String
+  email         String  @unique
   emailVerified DateTime?
-  image String?
-  accounts Account[]
-  sessions Session[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  quizzes Quiz[]
-  profile Profile?
-  token String?
-  attempt Attempt[]
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  quizzes       Quiz[]
+  profile       Profile?
+  token         String?
 }
 
 model Account {
@@ -43,8 +42,8 @@ model Account {
   id_token          String?
   session_state     String?
  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
  
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
@@ -57,8 +56,8 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
  
 model VerificationToken {
@@ -70,21 +69,21 @@ model VerificationToken {
 }
 
 model Profile{
-  id String @id @default(uuid())
-  user User @relation(fields: [userId],references: [id])
-  userId String @unique
-  name String
+  id      String @id @default(uuid())
+  user    User @relation(fields: [userId],references: [id])
+  userId  String @unique
+  name    String
 }
 
 model Quiz{
-  id String @id @default(uuid())
-  title String
-  questions Question[]
-  createdBy User @relation(fields: [userId], references: [id])
-  userId String
-  totalTime Int @default(60)
-  totalMarks Decimal @default(100)
-  attempts Attempt[]
+  id          String  @id @default(uuid())
+  title       String
+  questions   Question[]
+  createdBy   User    @relation(fields: [userId], references: [id])
+  userId      String
+  totalTime   Int     @default(60)
+  totalMarks  Decimal @default(100)
+  attempts    Attempt[]
 }
 
 enum Status{
@@ -95,46 +94,44 @@ enum Status{
 }
 
 model Attempt{
-  id String @id @default(uuid())
-  userId String
-  user User @relation(fields: [userId], references: [id])
-  quiz Quiz @relation(fields: [quizId],references: [id])
-  quizId String
-  timeLeft Int @default(60)
-  marksObtained Decimal
-  status Status @default(NOT_ATTEMPTED)
-  answers UserAnswer[]
+  id              String  @id @default(uuid())
+  quiz            Quiz    @relation(fields: [quizId],references: [id])
+  quizId          String
+  timeLeft        Int     @default(60)
+  marksObtained   Decimal
+  status          Status  @default(NOT_ATTEMPTED)
+  answers         UserAnswer[]
 }
 
 model Question{
-  id String @id @default(uuid())
-  quiz Quiz @relation(fields: [quizId],references: [id])
-  quizId String
-  que String
-  type Question_Type
+  id      String @id @default(uuid())
+  quizId  String
+  quiz    Quiz @relation(fields: [quizId],references: [id])
+  que     String
+  type    Question_Type
   options Option[]
-  marks Decimal @default(1)
-  answer UserAnswer[] 
+  marks   Decimal @default(1)
+  answers  UserAnswer[] // user can attempt manytimes
 }
 
 enum Question_Type{
-  PARAGRAPH
+  SUBJECTIVE
   MCQ
 }
 
 model Option{
-  id String @id @default(uuid())
-  text String
-  question Question @relation(fields: [queId],references: [id])
-  queId String
-  isCorrect Boolean @default(false)
-  answer UserAnswer[]
+  id        String    @id @default(uuid())
+  text      String
+  question  Question  @relation(fields: [queId],references: [id])
+  queId     String
+  isCorrect Boolean    @default(false)
+  answers    UserAnswer[] // user can attempt many times
 }
 
 model UserAnswer {
-  id        String   @id @default(uuid())
-  attemptId String
-  attempt   Attempt  @relation(fields: [attemptId], references: [id])
+  id         String   @id @default(uuid())
+  attemptId  String
+  attempt    Attempt  @relation(fields: [attemptId], references: [id])
   questionId String
   question   Question @relation(fields: [questionId], references: [id])
   optionId   String?

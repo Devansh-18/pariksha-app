@@ -1,25 +1,31 @@
 import "./globals.css";
-import type { ReactNode } from "react";
+import { Inter } from "next/font/google";
 import Nav from "@/components/navbar/Nav";
+import { Provider } from "./providers";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "QuizFlow — AI Quiz Generator",
   description: "Generate quizzes from topics or PDFs using Gemini",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-gray-50 text-gray-900">
-        <div className="flex flex-col min-h-screen">
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} w-full bg-[#020617] text-white`}>
+        <Provider>
           <Nav />
-          <main className="container mx-auto px-4 py-8 flex-1">{children}</main>
-          <footer className="bg-white border-t">
-            <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-              © {new Date().getFullYear()} QuizFlow — Built with Next.js & Gemini
-            </div>
+
+          <main className="min-h-screen">
+            {children}
+          </main>
+
+          <footer className="border-t border-white/10 p-6 mt-10 text-sm flex items-center justify-between text-gray-400">
+            <span>© 2025 Pariksha App</span>
+            <span className="text-xs">Build with ❤️ and AI</span>
           </footer>
-        </div>
+        </Provider>
       </body>
     </html>
   );
