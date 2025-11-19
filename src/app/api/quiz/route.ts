@@ -6,6 +6,7 @@ import { Question_Type } from "@/generated/prisma";
 import { quizAiResponseSchema } from "@/lib/zodSchemas";
 import { buildQuizCreationPrompt } from "@/lib/promptBuilder";
 import { pdfParser } from "@/lib/pdfParser";
+import prisma from "@/lib/prisma";
 
 const ai = new GoogleGenAI({});
 
