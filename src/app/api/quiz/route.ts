@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import {auth} from "@/lib/auth/auth";
 import { GoogleGenAI } from "@google/genai";
 import z from "zod";
 import { Question_Type } from "@/generated/prisma";
@@ -7,14 +6,15 @@ import { quizAiResponseSchema } from "@/lib/zodSchemas";
 import { buildQuizCreationPrompt } from "@/lib/promptBuilder";
 import { pdfParser } from "@/lib/pdfParser";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 const ai = new GoogleGenAI({});
 
-export const POST =  auth(async function POST(request:NextRequest){
+export async function POST(request:NextRequest){
         try{
-            const userId = (request as any).auth?.user?.id;
+            const {userId} = await auth();
             if(!userId){
-                return NextResponse.redirect(new URL("/login"));
+                return NextResponse.redirect("https://localhost:3000");
             }
             // the body contains quiz parameters that have to be passed to AI
             const formData = await request.formData();
@@ -97,7 +97,7 @@ export const POST =  auth(async function POST(request:NextRequest){
             };
 
             const createdQuiz = await prisma.quiz.create({
-                data:quizData,
+                data:quizData, // only send id
                 include:{
                     questions:{
                         include: {options:true}
@@ -120,4 +120,4 @@ export const POST =  auth(async function POST(request:NextRequest){
             },
             {status:500});
         }
-});
+};

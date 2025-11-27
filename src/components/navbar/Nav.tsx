@@ -1,12 +1,10 @@
 "use client";
 
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function Nav() {
-  const { data: session } = useSession();
-
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-8 md:px-12 py-4 bg-[#020617]/80 backdrop-blur-xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
       {/* Logo */}
@@ -38,14 +36,32 @@ export default function Nav() {
       </div>
 
       {/* Auth Button */}
-      <motion.button
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-        className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
-      >
-        {session ? "Go to Dashboard" : "Login"}
-      </motion.button>
+      <SignedOut>
+        <SignInButton>
+          <motion.button
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
+          >
+            Sign In
+          </motion.button>
+        </SignInButton>
+        <SignUpButton>
+          <motion.button
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
+          >
+            Sign Up
+          </motion.button>
+        </SignUpButton>
+      </SignedOut>
+
+      <SignedIn>
+        <UserButton/>
+      </SignedIn>
     </nav>
   );
 }

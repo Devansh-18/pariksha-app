@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           <footer className="border-t border-white/10 p-6 mt-10 text-sm flex items-center justify-between text-gray-400">
             <span>© 2025 Pariksha App</span>
-            <span className="text-xs">Build with ❤️ and AI</span>
+            <span className="text-xs">Build with ❤️ by Codingo</span>
           </footer>
         </Provider>
       </body>

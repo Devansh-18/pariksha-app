@@ -15,7 +15,6 @@ type ApiSuccessResponse = {
   message: string;
   data: {
     id: string;
-    // ...other quiz fields if needed
   };
 };
 
@@ -42,19 +41,19 @@ export default function QuizCreateForm() {
 
   const handleChange =
     (field: keyof QuizFormState) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value =
-        field === "totalMarks"
-          ? Number(e.target.value)
-          : field === "includeSubjective"
-          ? (e.target as HTMLInputElement).checked
-          : e.target.value;
+      (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const value =
+          field === "totalMarks"
+            ? Number(e.target.value)
+            : field === "includeSubjective"
+              ? (e.target as HTMLInputElement).checked
+              : e.target.value;
 
-      setForm((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    };
+        setForm((prev) => ({
+          ...prev,
+          [field]: value,
+        }));
+      };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -104,13 +103,12 @@ export default function QuizCreateForm() {
         fd.append("pdfUrl", form.pdfUrl.trim());
       }
 
-      const res = await fetch("/api/quiz", {
+      const res = await fetch("http://localhost:3000/api/quiz", {
         method: "POST",
         body: fd,
       });
+      console.log("error");
 
-      // If your API redirects unauthenticated requests to /login,
-      // handle that in the client:
       if (res.redirected) {
         router.push(res.url);
         return;
@@ -121,12 +119,12 @@ export default function QuizCreateForm() {
       if (!res.ok) {
         const err = data as ApiErrorResponse;
         setErrorMessage(
-            err.error ||
-            err.message ||
-            "Failed to create quiz. Please try again."
+          err.error ||
+          err.message ||
+          "Failed to create quiz. Please try again."
         );
         return;
-        }
+      }
 
 
       const success = data as ApiSuccessResponse;
@@ -135,17 +133,18 @@ export default function QuizCreateForm() {
       // OPTIONAL: redirect to a quiz detail page after a short delay.
       // Adjust the path as per your app.
       // router.push(`/dashboard/quizzes/${success.data.id}`);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error(err);
       setErrorMessage("Unexpected error. Please try again in a moment.");
-    } finally {
+    } 
+    finally {
       setIsSubmitting(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Top row: Topic + Total Marks */}
       <div className="grid gap-4 sm:grid-cols-[minmax(0,2fr),minmax(0,1fr)]">
         <div className="space-y-2">
           <label
@@ -212,16 +211,14 @@ export default function QuizCreateForm() {
                 includeSubjective: !prev.includeSubjective,
               }))
             }
-            className={`relative inline-flex h-6 w-11 items-center rounded-full border ${
-              form.includeSubjective
+            className={`relative inline-flex h-6 w-11 items-center rounded-full border ${form.includeSubjective
                 ? "border-indigo-400 bg-indigo-500/80"
                 : "border-neutral-600 bg-neutral-800"
-            } transition-colors`}
+              } transition-colors`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform ${
-                form.includeSubjective ? "translate-x-5" : "translate-x-1"
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform ${form.includeSubjective ? "translate-x-5" : "translate-x-1"
+                }`}
             />
           </button>
           <span className="text-xs text-neutral-400">On</span>
@@ -263,7 +260,7 @@ export default function QuizCreateForm() {
           htmlFor="pdfUrl"
           className="text-sm font-medium text-neutral-200"
         >
-          PDF URL (optional)
+          PDF URL (Optional: If you included PDF file than it has no role.)
         </label>
         <input
           id="pdfUrl"
@@ -294,7 +291,7 @@ export default function QuizCreateForm() {
       {/* Actions */}
       <div className="flex items-center justify-between gap-4">
         <p className="text-xs text-neutral-500">
-          The quiz will be generated using Gemini and saved via Prisma.
+          The quiz will be generated using AI.
         </p>
         <button
           type="submit"
