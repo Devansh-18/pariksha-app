@@ -4,9 +4,9 @@ import z from "zod";
 import { Question_Type } from "@/generated/prisma";
 import { quizAiResponseSchema } from "@/lib/zodSchemas";
 import { buildQuizCreationPrompt } from "@/lib/promptBuilder";
-import { pdfParser } from "@/lib/pdfParser";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { pdfParser } from "@/lib/pdfParser";
 
 const ai = new GoogleGenAI({});
 

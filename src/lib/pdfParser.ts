@@ -1,39 +1,35 @@
-export const runtime = "nodejs";
-
+import { extractText, getDocumentProxy } from 'unpdf'
 
 export async function pdfParser({pdf,pdfUrl}:
     {
         pdf:FormDataEntryValue | null,
         pdfUrl:FormDataEntryValue | null,
     }){
-
-    const { PDFParse } = require('pdf-parse');
-
+            
     let pdfText = "";
     if (pdf) {
         // CASE 1: Uploaded file
         const file = pdf as File;
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        // Initialize parser with local data
-        const parser = new PDFParse({ data: buffer });
+        const bufferedPDF = await getDocumentProxy(new Uint8Array(buffer));
 
         // Extract text
-        const result = await parser.getText();
-        pdfText = result.text ?? "";
-
-        await parser.destroy();
+        const { text } = await extractText(bufferedPDF, { mergePages: true })
+        pdfText = text ?? "";
     }
     else if (pdfUrl) {
         // CASE 2: URL-based PDF
         const pdfURL = pdfUrl?.toString();
 
-        const parser = new PDFParse({ url: pdfURL });
+        const buffer = await fetch(pdfURL)
+        .then(res => res.arrayBuffer())
 
-        const result = await parser.getText();
-        pdfText = result.text ?? "";
+        const bufferedPDF = await getDocumentProxy(new Uint8Array(buffer));
 
-        await parser.destroy();
+        // Extract text
+        const { text } = await extractText(bufferedPDF, { mergePages: true })
+        pdfText = text ?? "";
     }
     return pdfText;
 }
