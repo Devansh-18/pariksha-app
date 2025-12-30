@@ -24,7 +24,7 @@ type ApiErrorResponse = {
   message?: string;
 };
 
-export default function QuizCreateForm() {
+export default async function QuizCreateForm() {
   const router = useRouter();
 
   const [form, setForm] = useState<QuizFormState>({

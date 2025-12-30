@@ -10,6 +10,7 @@ import { pdfParser } from "@/lib/pdfParser";
 
 const ai = new GoogleGenAI({});
 
+//create a new quiz from ai.
 export async function POST(request:NextRequest){
         try{
             const {userId} = await auth();
@@ -97,18 +98,26 @@ export async function POST(request:NextRequest){
             };
 
             const createdQuiz = await prisma.quiz.create({
-                data:quizData, // only send id
+                data:quizData,
                 include:{
                     questions:{
                         include: {options:true}
                     }
                 }
-            })
+            });
+
+            if(!createdQuiz.id){
+                return NextResponse.json({
+                    success:false,
+                    message:"Quiz not created",
+                    error:"Quiz Creation Failed at DB",
+                },{status:500});
+            }
 
             return NextResponse.json({
                 success:true,
                 message:"Quiz created successfully",
-                data:createdQuiz,
+                data:createdQuiz, // only send id
             },{status:201});
             
         }
@@ -120,4 +129,48 @@ export async function POST(request:NextRequest){
             },
             {status:500});
         }
+};
+
+//get all quiz for a user having userid.
+export async function GET(req:NextRequest){
+    try{
+        const {userId} = await auth();
+        if(!userId){
+            return NextResponse.json({
+                success:false,
+                message:"User is not authenticated.",
+                error:"Unauthenticated",
+            });
+        }
+
+        const quizzes = await prisma.quiz.findMany({
+            where:{
+                userId,
+            },
+            orderBy:{
+                createdAt:"desc"
+            },
+            select:{
+                id:true,
+                createdAt:true,
+                title:true,
+                totalTime:true,
+                //marks can be viewed in session
+            }
+        });
+        return NextResponse.json({
+            success:true,
+            message:`All quiz fetched for user ${userId}`,
+            data:{
+                quizzes,
+            }
+        });
+    }
+    catch(err){
+        return NextResponse.json({
+            success:false,
+            message:"Internal Server Error",
+            error:err,
+        });
+    }
 };
