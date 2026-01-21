@@ -176,6 +176,6 @@ export async function GET(req:NextRequest, { params }: { params: { id: string } 
             success:false,
             message:"Internal Server Error",
             error:err,
-        });
+        },{status:500});
     }
 }

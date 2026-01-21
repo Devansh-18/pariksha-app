@@ -33,7 +33,7 @@ export async function POST(req:NextRequest){
         const quiz = await prisma.quiz.findUnique({
             where:{
                 id:quizId,
-                createdBy:userId,
+                userId,
             },
             include:{
                 questions:{

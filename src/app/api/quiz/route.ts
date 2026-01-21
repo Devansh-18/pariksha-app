@@ -15,7 +15,11 @@ export async function POST(request:NextRequest){
         try{
             const {userId} = await auth();
             if(!userId){
-                return NextResponse.redirect("https://localhost:3000");
+                return NextResponse.json({
+                    success:false,
+                    message: "Unauthenticated User",
+                    error:"Authentication not found"
+                },{status:401});
             }
             // the body contains quiz parameters that have to be passed to AI
             const formData = await request.formData();
@@ -68,7 +72,7 @@ export async function POST(request:NextRequest){
                 return NextResponse.json({
                     success:false,
                     error:"Ai response error",
-                },{status:500});
+                },{status:400});
             }
 
             const quizAiData = quizAiResponseSchema.parse(JSON.parse(aiResponse.text));
@@ -140,7 +144,7 @@ export async function GET(req:NextRequest){
                 success:false,
                 message:"User is not authenticated.",
                 error:"Unauthenticated",
-            });
+            },{status:401});
         }
 
         const quizzes = await prisma.quiz.findMany({
@@ -155,7 +159,7 @@ export async function GET(req:NextRequest){
                 createdAt:true,
                 title:true,
                 totalTime:true,
-                //marks can be viewed in session
+                //marks can be viewed in attempt 
             }
         });
         return NextResponse.json({
@@ -164,13 +168,13 @@ export async function GET(req:NextRequest){
             data:{
                 quizzes,
             }
-        });
+        },{status:200});
     }
     catch(err){
         return NextResponse.json({
             success:false,
             message:"Internal Server Error",
             error:err,
-        });
+        },{status:500});
     }
 };

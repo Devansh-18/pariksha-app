@@ -2,34 +2,18 @@
 
 import { useEffect, useState } from "react";
 
-export default async function GetNewAttempt(quizId:string){
+export default async function ExamView({quizData}:{quizData:any}){
 
     const [timeLeft,setTimeLeft] = useState(0);
-    const [quiz,setQuiz] = useState<any>(null);
     const [currentIndex,setCurrentIndex] = useState(0);
     const [answers,setAnswers] = useState<any>({});
 
+    const quiz = quizData.quiz;
+    const quizId = quiz.id;
+    const attemptId = quizData.id;
+
     useEffect(()=>{
-        const fetchQuiz = async()=>{
-            const res = await fetch(`${process.env.BASE_URL}/api/quiz/new-attempt`,{
-                method:"POST",
-                body:quizId,
-            });
-
-            const data = (await res.json());
-            // error handling 
-            if(!res || !data || data.success == false){
-                console.log(data.error);
-                return;
-            }
-        
-            const quizData = data.data;
-            console.log(quizData);
-            setQuiz(quizData.quiz);
-            setTimeLeft(quizData.totalTime);
-        };
-        fetchQuiz();
-
+        setTimeLeft(quizData.totalTime);
     }, []);
 
     useEffect(()=>{
@@ -65,9 +49,9 @@ export default async function GetNewAttempt(quizId:string){
     }
 
     const handleSubmit = async()=>{
-        const res = await fetch(`/api/quiz/${quizId}}/submit`,{
+        const res = await fetch(`/api/quiz/submit`,{
             method:'POST',
-            body:JSON.stringify({answers}),
+            body:JSON.stringify({answers,attemptId,quizId}),
             headers: {'Content-type':'application/json'},
         });
 

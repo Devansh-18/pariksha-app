@@ -103,7 +103,7 @@ export default async function QuizCreateForm() {
         fd.append("pdfUrl", form.pdfUrl.trim());
       }
 
-      const res = await fetch("http://localhost:3000/api/quiz", {
+      const res = await fetch("/api/quiz", {
         method: "POST",
         body: fd,
       });
@@ -130,9 +130,7 @@ export default async function QuizCreateForm() {
       const success = data as ApiSuccessResponse;
       setSuccessMessage(success.message || "Quiz created successfully!");
 
-      // OPTIONAL: redirect to a quiz detail page after a short delay.
-      // Adjust the path as per your app.
-      // router.push(`/dashboard/quizzes/${success.data.id}`);
+      router.push(`/dashboard/quizzes`);
     } 
     catch (err) {
       console.error(err);

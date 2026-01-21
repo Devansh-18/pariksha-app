@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "QuizFlow — AI Quiz Generator",
-  description: "Generate quizzes from topics or PDFs using Gemini",
+  description: "Generate quizzes from topics or PDFs using AI",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

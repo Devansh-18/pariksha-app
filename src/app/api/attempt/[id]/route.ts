@@ -11,7 +11,7 @@ export async function GET(req:NextRequest,{params}:{params:{id:string}}){
                 success:false,
                 message:"User not authenticated.",
                 error:"Unauthenticated",
-            });
+            },{status:401});
         }
 
         const {id:attemptId} = await params;
@@ -21,7 +21,7 @@ export async function GET(req:NextRequest,{params}:{params:{id:string}}){
                 success:false,
                 message:"Attempt id not passed.",
                 error:"Attempt ID empty",
-            });
+            },{status:404});
         }
 
         const attempt = await prisma.attempt.findUnique({
@@ -132,6 +132,6 @@ export async function GET(req:NextRequest,{params}:{params:{id:string}}){
             success:false,
             message:"Internal Server Error",
             error:err,
-        });
+        },{status:500});
     }
 }
