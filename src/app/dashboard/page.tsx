@@ -1,9 +1,5 @@
-import { ProfileData } from "@/components/dashboard/ProfileData";
+import { redirect } from "next/navigation";
 
 export default function Dashboard(){
-    return (
-        <div>
-            <ProfileData/>
-        </div>
-    )
+    redirect("/dashboard/profile");
 }

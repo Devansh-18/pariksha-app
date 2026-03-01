@@ -24,13 +24,13 @@ model User {
   profile         Profile?
 }
 
-model Profile{
+model Profile {
   id      String @id @default(uuid())
   user    User @relation(fields: [userId],references: [clerkUserId])
   userId  String @unique
 }
 
-model Quiz{
+model Quiz {
   id          String  @id @default(uuid())
   title       String
   questions   Question[]
@@ -42,13 +42,13 @@ model Quiz{
   attempts    Attempt[]
 }
 
-enum Status{
+enum Status {
   ATTEMPTED
   NOT_ATTEMPTED
   FULLY_CHECKED
 }
 
-model Attempt{
+model Attempt {
   id              String  @id @default(uuid())
   quiz            Quiz    @relation(fields: [quizId],references: [id])
   quizId          String
@@ -60,7 +60,7 @@ model Attempt{
   createdAt       DateTime @default(now())
 }
 
-model Question{
+model Question {
   id          String  @id @default(uuid())
   quiz        Quiz    @relation(fields: [quizId],references: [id])
   quizId      String
@@ -71,12 +71,12 @@ model Question{
   userAnswer  UserAnswer[] // array is used due to several attempts
 }
 
-enum Question_Type{
+enum Question_Type {
   SUBJECTIVE
   MCQ
 }
 
-model Option{
+model Option {
   id        String    @id @default(uuid())
   text      String
   question  Question  @relation(fields: [queId],references: [id])

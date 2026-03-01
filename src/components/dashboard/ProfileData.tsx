@@ -1,12 +1,27 @@
+import { fetchUser } from "@/lib/actions/user/fetchUser";
 import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
 export async function ProfileData(){
     const {userId} = await auth();
-    const userData = await fetch('/api/user',{method:'GET'});
-    // error handling to be done later 
+    if(!userId){
+        await auth.protect();
+        return;
+    }
+    
+    const userData = await fetchUser(userId);
+    if(!userData){
+        notFound();
+    }
 
     return <div>
         {/* name, date of birth and other things shows that are fetched from api */}
+        Profile Data
+        <p>
+            <span>{userData.firstName} </span>
+            <span>{userData.lastName} </span>
+        </p>
+        <p>{userData.email} </p>
     </div>
 
 }

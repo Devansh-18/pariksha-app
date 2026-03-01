@@ -1,7 +1,8 @@
 import { ProfileData } from "@/components/dashboard/ProfileData";
 
-export function Profile(){
+export default function Profile(){
     return <div>
+        Profile Page
         <ProfileData/>
     </div>
 }

@@ -1,7 +1,8 @@
 import { QuizData } from "@/components/dashboard/QuizData";
 
-export function Quizzes(){
+export default function Quizzes(){
     return <div>
+        Quiz Page
         <QuizData/>
     </div>
 }

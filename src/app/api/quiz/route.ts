@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import z from "zod";
 import { Question_Type } from "@/generated/prisma";
-import { quizAiResponseSchema } from "@/lib/zodSchemas";
-import { buildQuizCreationPrompt } from "@/lib/promptBuilder";
+import { quizAiResponseSchema } from "@/utils/zodSchemas";
+import { buildQuizCreationPrompt } from "@/utils/promptBuilder";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { pdfParser } from "@/lib/pdfParser";
+import { pdfParser } from "@/utils/pdfParser";
 
 const ai = new GoogleGenAI({});
 
@@ -136,45 +136,45 @@ export async function POST(request:NextRequest){
 };
 
 //get all quiz for a user having userid.
-export async function GET(req:NextRequest){
-    try{
-        const {userId} = await auth();
-        if(!userId){
-            return NextResponse.json({
-                success:false,
-                message:"User is not authenticated.",
-                error:"Unauthenticated",
-            },{status:401});
-        }
+// export async function GET(){
+//     try{
+//         const {userId} = await auth();
+//         if(!userId){
+//             return NextResponse.json({
+//                 success:false,
+//                 message:"User is not authenticated.",
+//                 error:"Unauthenticated",
+//             },{status:401});
+//         }
 
-        const quizzes = await prisma.quiz.findMany({
-            where:{
-                userId,
-            },
-            orderBy:{
-                createdAt:"desc"
-            },
-            select:{
-                id:true,
-                createdAt:true,
-                title:true,
-                totalTime:true,
-                //marks can be viewed in attempt 
-            }
-        });
-        return NextResponse.json({
-            success:true,
-            message:`All quiz fetched for user ${userId}`,
-            data:{
-                quizzes,
-            }
-        },{status:200});
-    }
-    catch(err){
-        return NextResponse.json({
-            success:false,
-            message:"Internal Server Error",
-            error:err,
-        },{status:500});
-    }
-};
+//         const quizzes = await prisma.quiz.findMany({
+//             where:{
+//                 userId,
+//             },
+//             orderBy:{
+//                 createdAt:"desc"
+//             },
+//             select:{
+//                 id:true,
+//                 createdAt:true,
+//                 title:true,
+//                 totalTime:true,
+//                 //marks can be viewed in attempt 
+//             }
+//         });
+//         return NextResponse.json({
+//             success:true,
+//             message:`All quiz fetched for user ${userId}`,
+//             data:{
+//                 quizzes,
+//             }
+//         },{status:200});
+//     }
+//     catch(err){
+//         return NextResponse.json({
+//             success:false,
+//             message:"Internal Server Error",
+//             error:err,
+//         },{status:500});
+//     }
+// };

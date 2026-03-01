@@ -1,6 +1,6 @@
 import ExamView from "@/components/quiz/exam-center/ExamView";
 
-export default async function examCenter(params : {quizId:string}){
+export default async function examCenter(params : Promise<{quizId:string}>){
 
     const {quizId} = await params;
 

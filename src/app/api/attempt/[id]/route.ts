@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 // get attempted answers with given attempt id 
-export async function GET(req:NextRequest,{params}:{params:{id:string}}){
+export async function GET(req:NextRequest,{params}:{params:Promise<{id:string}>}){
     try{
         const {userId} = await auth();
         if(!userId){
@@ -108,7 +108,7 @@ export async function GET(req:NextRequest,{params}:{params:{id:string}}){
                 marks: q.marks,
                 type: q.type,
                 userAnswer: q.userAnswer ?? null,
-                // enable this only if you have correctAnswer
+                // enable this only if mcq
                 // isUserCorrect: q.userAnswer === q.correctAnswer
             };
         });

@@ -1,18 +1,23 @@
+import { fetchQuizzes } from "@/lib/actions/quiz/fetchQuizzes";
+import { QuizDataType } from "@/types/quiz/QuizData";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
-
-type QuizDataType = {
-    id:string,
-    title:string,
-    totalTime:number,
-    createdAt:Date,
-};
+import { notFound } from "next/navigation";
 
 // show all quizzes given with marks and date in each quiz row
 export async function QuizData(){
-    const res = await fetch('/api/quiz',{
-        method:'GET'
-    });
-    const quizzes:QuizDataType[] = await res.json();
+    const {userId} = await auth();
+    if(!userId){
+        await auth.protect();
+        return;
+    }
+    
+    const res = await fetchQuizzes(userId);
+    if(!res){
+        notFound();
+    }
+
+    const quizzes:QuizDataType[] = res;
     
     return (
         <div>
