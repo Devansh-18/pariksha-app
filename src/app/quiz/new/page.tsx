@@ -1,6 +1,18 @@
 import QuizCreateForm from "@/components/quiz/QuizCreateForm";
+import { fetchUser } from "@/lib/actions/user/fetchUser";
+import { auth } from "@clerk/nextjs/server";
 
-export default function NewQuizPage() {
+export default async function NewQuizPage() {
+  const {userId} = await auth();
+  if(!userId){
+    await auth.protect();
+    return;
+  }
+  
+  // Ensure that user entry must be present in db.
+  const userData = await fetchUser(userId);
+  if(!userData) return;
+
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-3xl space-y-8">

@@ -2,29 +2,10 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ApiErrorResponse, ApiSuccessResponse } from "@/types/ApiResponseTypes";
+import { QuizFormState } from "@/types/QuizTypes";
 
-type QuizFormState = {
-  topic: string;
-  totalMarks: number;
-  includeSubjective: boolean;
-  pdfUrl: string;
-};
-
-type ApiSuccessResponse = {
-  success: true;
-  message: string;
-  data: {
-    id: string;
-  };
-};
-
-type ApiErrorResponse = {
-  success?: false;
-  error?: string;
-  message?: string;
-};
-
-export default async function QuizCreateForm() {
+export default function QuizCreateForm() {
   const router = useRouter();
 
   const [form, setForm] = useState<QuizFormState>({
@@ -39,28 +20,28 @@ export default async function QuizCreateForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleChange =
-    (field: keyof QuizFormState) =>
-      (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  function handleChange(field: keyof QuizFormState){
+      return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const value =
-          field === "totalMarks"
-            ? Number(e.target.value)
-            : field === "includeSubjective"
-              ? (e.target as HTMLInputElement).checked
-              : e.target.value;
-
+        field === "totalMarks"
+        ? Number(e.target.value)
+        : field === "includeSubjective"
+        ? (e.target as HTMLInputElement).checked
+        : e.target.value;
+        
         setForm((prev) => ({
           ...prev,
           [field]: value,
         }));
       };
+  }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>){
     const file = e.target.files?.[0] ?? null;
     setPdfFile(file);
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  async function handleSubmit(e: FormEvent){
     e.preventDefault();
 
     setErrorMessage(null);
@@ -131,11 +112,11 @@ export default async function QuizCreateForm() {
       setSuccessMessage(success.message || "Quiz created successfully!");
 
       router.push(`/dashboard/quizzes`);
-    } 
+    }
     catch (err) {
       console.error(err);
       setErrorMessage("Unexpected error. Please try again in a moment.");
-    } 
+    }
     finally {
       setIsSubmitting(false);
     }
@@ -210,8 +191,8 @@ export default async function QuizCreateForm() {
               }))
             }
             className={`relative inline-flex h-6 w-11 items-center rounded-full border ${form.includeSubjective
-                ? "border-indigo-400 bg-indigo-500/80"
-                : "border-neutral-600 bg-neutral-800"
+              ? "border-indigo-400 bg-indigo-500/80"
+              : "border-neutral-600 bg-neutral-800"
               } transition-colors`}
           >
             <span

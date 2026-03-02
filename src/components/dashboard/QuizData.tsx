@@ -1,5 +1,5 @@
 import { fetchQuizzes } from "@/lib/actions/quiz/fetchQuizzes";
-import { QuizDataType } from "@/types/quiz/QuizData";
+import { QuizDataType } from "@/types/QuizTypes";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
