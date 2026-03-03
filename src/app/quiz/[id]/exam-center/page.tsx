@@ -1,10 +1,10 @@
 import ExamView from "@/components/quiz/exam-center/ExamView";
 
-export default async function examCenter(params : Promise<{quizId:string}>){
+export default async function examCenter(params : Promise<{id:string}>){
 
-    const {quizId} = await params;
+    const {id} = await params;
 
-    const res = await fetch(`/api/quiz/${quizId}/attempt`,{
+    const res = await fetch(`/api/quiz/${id}/attempt`,{
         method:"POST",
     });
 

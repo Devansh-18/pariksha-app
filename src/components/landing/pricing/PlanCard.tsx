@@ -1,59 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 
-const plans = [
-  {
-    name: "Starter",
-    price: "Free",
-    highlight: false,
-    description: "Perfect for students & solo teachers getting started.",
-    features: [
-      "Up to 50 AI-generated questions / month",
-      "Quiz export as PDF",
-      "Basic editing tools",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "$9 / mo",
-    highlight: true,
-    description: "For serious educators and small teams.",
-    features: [
-      "Unlimited AI-generated questions",
-      "PDF & Google Forms export",
-      "Question bank & tagging",
-      "Priority generation speed",
-    ],
-  },
-  {
-    name: "Team",
-    price: "$29 / mo",
-    highlight: false,
-    description: "Collaborate across institutions or coaching centers.",
-    features: [
-      "Everything in Pro",
-      "Shared question libraries",
-      "Role-based access",
-      "Advanced analytics",
-    ],
-  },
-];
-
-export default function Pricing() {
-  return (
-    <section className="py-16 bg-[#020617]">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Pricing that scales with you</h2>
-          <p className="mt-3 text-gray-400 text-sm md:text-base">
-            Start free. Upgrade only when you&apos;re ready to automate more of your workflow.
-          </p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          {plans.map((plan, idx) => (
-            <motion.div
+export function PlanCard({plan,idx}:{plan:any,idx:number}){
+    return(
+        <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -77,7 +28,7 @@ export default function Pricing() {
                 <p className="mt-2 text-xs md:text-sm text-gray-400">{plan.description}</p>
 
                 <ul className="mt-4 space-y-2 text-xs md:text-sm text-gray-300">
-                  {plan.features.map((f) => (
+                  {plan.features.map((f:string) => (
                     <li key={f} className="flex gap-2">
                       <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-purple-400 to-blue-400" />
                       <span>{f}</span>
@@ -96,9 +47,5 @@ export default function Pricing() {
                 {plan.highlight ? "Start Pro" : "Get Started"}
               </button>
             </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+    )
 }

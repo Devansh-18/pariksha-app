@@ -36,32 +36,38 @@ export default function Nav() {
       </div>
 
       {/* Auth Button */}
-      <SignedOut>
-        <SignInButton>
-          <motion.button
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
-          >
-            Sign In
-          </motion.button>
-        </SignInButton>
-        <SignUpButton>
-          <motion.button
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
-          >
-            Sign Up
-          </motion.button>
-        </SignUpButton>
-      </SignedOut>
+      <Suspense fallback={<div>Loading</div>}>
+        <SignedOut>
+          <div>
+            <SignInButton>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
+              >
+                Sign In
+              </motion.button>
+            </SignInButton>
+            <SignUpButton>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110 shadow-lg shadow-purple-500/40 text-xs md:text-sm font-semibold"
+              >
+                Sign Up
+              </motion.button>
+            </SignUpButton>
+          </div>
+        </SignedOut>
 
-      <SignedIn>
-        <UserButton/>
-      </SignedIn>
+        <SignedIn>
+          <div>
+            <UserButton/>
+          </div>
+        </SignedIn>
+      </Suspense>
     </nav>
   );
 }

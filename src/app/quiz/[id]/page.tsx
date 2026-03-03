@@ -22,8 +22,7 @@ export default async function QuizDataPage({params}:{params:Promise<{id:string}>
             {
                 attempts.length===0?(
                     <div>
-                        Hi, you have not attempted the quiz yet.
-                        
+                        Hi, you have not attempted the quiz yet.  
                     </div>
                 ):(
                 attempts.map((attempt)=>(
