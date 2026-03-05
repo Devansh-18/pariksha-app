@@ -1,3 +1,5 @@
+import { stats } from "@/utils/home/stats";
+
 export default function Stats() {
   return (
     <section className="py-10 bg-[#020617]">

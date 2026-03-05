@@ -6,13 +6,8 @@ import { notFound } from "next/navigation";
 
 // show all quizzes given with marks and date in each quiz row
 export async function QuizData(){
-    const {userId} = await auth();
-    if(!userId){
-        await auth.protect();
-        return;
-    }
+    const res = await fetchQuizzes();
     
-    const res = await fetchQuizzes(userId);
     if(!res){
         notFound();
     }

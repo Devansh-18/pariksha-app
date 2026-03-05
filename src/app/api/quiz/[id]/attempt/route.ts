@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { success } from "zod";
 
 //create new attempt and fetch quiz for user.
 export async function POST(request:NextRequest,{ params }: { params: Promise<{ id: string }> }){
@@ -18,6 +19,7 @@ export async function POST(request:NextRequest,{ params }: { params: Promise<{ i
         
         if(!quizId){
             return NextResponse.json({
+                success:false,
                 message:"Quiz id not found",
                 error:"Quiz Id missing"
             },{status:404});
@@ -58,9 +60,8 @@ export async function POST(request:NextRequest,{ params }: { params: Promise<{ i
 
         if(prevNotAttempted && prevNotAttempted.id){
             return NextResponse.json({
-                data:{
-                    prevNotAttempted,
-                },
+                success:true,
+                data:prevNotAttempted,
                 message:"Previous Quiz fetched successfully"
             },{status:200});
         }
@@ -99,6 +100,7 @@ export async function POST(request:NextRequest,{ params }: { params: Promise<{ i
 
         if(!newAttempt.id || !newAttempt.quiz){
             return NextResponse.json({
+                success:false,
                 message:"Quiz not fetched",
                 error:"Quiz not existed"
             },{status:404});
@@ -106,14 +108,14 @@ export async function POST(request:NextRequest,{ params }: { params: Promise<{ i
 
 
         return NextResponse.json({
-            data:{
-                newAttempt
-            },
+            success:true,
+            data:newAttempt,
             message:"Quiz fetched successfully"
         },{status:200});
     }
     catch(err){
         return NextResponse.json({
+            success:false,
             error:err,
             message:"Internal Server Error"
         },{status:500});

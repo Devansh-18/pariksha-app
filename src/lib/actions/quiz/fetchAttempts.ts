@@ -1,6 +1,13 @@
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
-export async function fetchAttempts({quizId,userId}:{quizId:string,userId:string}) {
+export async function fetchAttempts(quizId:string) {
+    const {userId} = await auth();
+    if(!userId){
+        await auth.protect();
+        return null;
+    }
+
     try{
         return await prisma.attempt.findMany({
             where: {

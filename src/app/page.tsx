@@ -1,11 +1,11 @@
 "use client";
 
+import CTA from "@/components/landing/CTA";
+import Features from "@/components/landing/features/Features";
 import Hero from "@/components/landing/Hero";
-import Features from "@/components/landing/Features";
+import Pricing from "@/components/landing/pricing/Pricing";
 import Stats from "@/components/landing/Stats";
 import Steps from "@/components/landing/Steps";
-import Pricing from "@/components/landing/Pricing";
-import CTA from "@/components/landing/CTA";
 
 export default function Home() {
   return (

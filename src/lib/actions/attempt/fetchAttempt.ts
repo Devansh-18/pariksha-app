@@ -6,11 +6,11 @@ export async function fetchAttempt(attemptId:string){
         const {userId} = await auth();
         if(!userId){
             await auth.protect();
-            return;
+            return null;
         }
 
         if(!attemptId){
-            return;
+            return null;
         }
 
         let attemptData = null;

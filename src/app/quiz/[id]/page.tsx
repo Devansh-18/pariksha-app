@@ -1,18 +1,11 @@
 import { fetchAttempts } from "@/lib/actions/quiz/fetchAttempts";
-import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function QuizDataPage({params}:{params:Promise<{id:string}>}){
-    const {userId} = await auth();
-    if(!userId){
-        await auth.protect();
-        return;
-    }
-
     const {id:quizId} = await params;
 
-    const attempts = await fetchAttempts({quizId,userId});
+    const attempts = await fetchAttempts(quizId);
     if(!attempts){
         notFound();
     }

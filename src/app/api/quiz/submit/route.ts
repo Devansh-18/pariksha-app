@@ -11,7 +11,7 @@ export async function POST(req:NextRequest){
                 success:false,
                 message:"Unauthenticated, Try again.",
                 error:"Authentication Failed",
-            },{status:403});
+            },{status:401});
         }
 
         // require answers as array containing que id and selected option id or para text.

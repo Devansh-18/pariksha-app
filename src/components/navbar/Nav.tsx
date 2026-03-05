@@ -3,6 +3,7 @@
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default function Nav() {
   return (
@@ -30,7 +31,7 @@ export default function Nav() {
         <Link href="/quiz/new" className="hover:text-white transition-colors">
           Create Quiz
         </Link>
-        <Link href="/dashboard" className="hover:text-white transition-colors">
+        <Link href="/dashboard/profile" className="hover:text-white transition-colors">
           Dashboard
         </Link>
       </div>

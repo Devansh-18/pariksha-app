@@ -3,13 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 
 export async function ProfileData(){
-    const {userId} = await auth();
-    if(!userId){
-        await auth.protect();
-        return;
-    }
+    const userData = await fetchUser();
     
-    const userData = await fetchUser(userId);
     if(!userData){
         notFound();
     }

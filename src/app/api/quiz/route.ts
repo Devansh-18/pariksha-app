@@ -34,6 +34,7 @@ export async function POST(request:NextRequest){
                 return NextResponse.json({
                     success:false,
                     error:"No topic or pdf to create quiz.",
+                    message:"Provide all necessary info."
                 },{status:400});
             }
 
@@ -43,10 +44,12 @@ export async function POST(request:NextRequest){
                 pdfText = await pdfParser({pdf,pdfUrl});
                 // Validation
                 if (!pdfText.trim()) {
-                    return NextResponse.json(
-                        { success: false, error: "PDF has no readable text or is image-based" },
-                        { status: 400 }
-                    );
+                    return NextResponse.json({ 
+                        success: false, 
+                        error: "PDF has no readable text or is image-based",
+                        message:"Provide readable pdf.",
+                    },
+                    { status: 400 });
                 }
             }
 
@@ -72,6 +75,7 @@ export async function POST(request:NextRequest){
                 return NextResponse.json({
                     success:false,
                     error:"Ai response error",
+                    message:"Error in creating quiz from AI",
                 },{status:400});
             }
 
@@ -115,7 +119,7 @@ export async function POST(request:NextRequest){
                     success:false,
                     message:"Quiz not created",
                     error:"Quiz Creation Failed at DB",
-                },{status:500});
+                },{status:404});
             }
 
             return NextResponse.json({
@@ -128,6 +132,7 @@ export async function POST(request:NextRequest){
         catch(error){
             console.log(error);
             return NextResponse.json({
+                success:false,
                 error:error,
                 message:"Internal Server Error while creating quiz",
             },
