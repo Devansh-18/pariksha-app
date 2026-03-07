@@ -1,9 +1,7 @@
 export type ApiSuccessResponse = {
   success: true;
   message: string;
-  data: {
-    id: string;
-  };
+  data: any
 };
 
 export type ApiErrorResponse = {

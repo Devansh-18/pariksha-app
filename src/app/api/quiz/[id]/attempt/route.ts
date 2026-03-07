@@ -6,6 +6,7 @@ import { success } from "zod";
 //create new attempt and fetch quiz for user.
 export async function POST(request:NextRequest,{ params }: { params: Promise<{ id: string }> }){
     try{
+        console.log("INCOMING REQUEST");
         const {userId} = await auth();
         if(!userId){
             return NextResponse.json({

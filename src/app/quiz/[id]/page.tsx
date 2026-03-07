@@ -12,6 +12,10 @@ export default async function QuizDataPage({params}:{params:Promise<{id:string}>
 
     return(
         <div>
+            <div>
+                <p>Here is all your listed attempts for the specific quiz. </p>
+                <Link href={`/quiz/${quizId}/exam-center`}>Give Test</Link>
+            </div>
             {
                 attempts.length===0?(
                     <div>

@@ -1,19 +1,21 @@
 "use client"
 
+import { Question_Type } from "@/generated/prisma";
+import { ExamQuizDataType, QuizTestType } from "@/types/ExamTypes";
 import { useEffect, useState } from "react";
 
-export default async function ExamView({quizData}:{quizData:any}){
+export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType}){
 
     const [timeLeft,setTimeLeft] = useState(0);
     const [currentIndex,setCurrentIndex] = useState(0);
     const [answers,setAnswers] = useState<any>({});
 
-    const quiz = quizData.quiz;
+    const quiz:QuizTestType = quizTestData.quiz;
     const quizId = quiz.id;
-    const attemptId = quizData.id;
+    const attemptId = quizTestData.id;
 
     useEffect(()=>{
-        setTimeLeft(quizData.totalTime);
+        setTimeLeft(quiz.totalTime);
     }, []);
 
     useEffect(()=>{
@@ -28,27 +30,27 @@ export default async function ExamView({quizData}:{quizData:any}){
 
     const que = quiz.questions[currentIndex];
 
-    const handleMCQ = (optionId:string)=>{
-        setAnswers({...answers,[que.id]:optionId});
+    function handleMCQ(optionId:string){
+        setAnswers({...answers,[que.id]:optionId}); // if same key, value will be replaced
     }
 
-    const handleText = (e:any)=>{
+    function handleText(e:any){
         setAnswers({...answers,[que.id]:e.target.value});
     }
 
-    const next = ()=>{
+    function handleNext(){
         if(currentIndex<quiz.questions.length-1){
             setCurrentIndex(currentIndex+1);
         }
     }
 
-    const prev = ()=>{
+    function handlePrev(){
         if(currentIndex>0){
             setCurrentIndex(currentIndex-1);
         }
     }
 
-    const handleSubmit = async()=>{
+    async function handleSubmit(){
         const res = await fetch(`/api/quiz/submit`,{
             method:'POST',
             body:JSON.stringify({answers,attemptId,quizId}),
@@ -62,11 +64,13 @@ export default async function ExamView({quizData}:{quizData:any}){
 
     return (
         <div>
+            <p>This is exam page</p>
             {/* show time  */}
+            <span>{timeLeft}/{quiz.totalTime}</span>
             {/* show question number */}
-
+            <p>Que {currentIndex+1}: {que.que} </p>
             {
-                que.type==="MCQ" && (
+                que.type===Question_Type.MCQ && (
                     <div>
                         {que.options.map((option:any)=>(
                             <label key={option.id}>
@@ -83,7 +87,7 @@ export default async function ExamView({quizData}:{quizData:any}){
                 )
             }
             {
-                que.type === "SUBJECTIVE" && (
+                que.type === Question_Type.SUBJECTIVE && (
                     <textarea
                     placeholder="Type your answer here..."
                     onChange={handleText}
@@ -92,8 +96,8 @@ export default async function ExamView({quizData}:{quizData:any}){
                 )
             }
             {/* prev,next,submit buttons */}
+            <button onClick={handlePrev}>Prev</button>
+            <button onClick={handleNext}>Next</button>
         </div>
     )
-
-    
 }
