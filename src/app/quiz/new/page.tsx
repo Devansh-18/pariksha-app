@@ -1,16 +1,9 @@
 import QuizCreateForm from "@/components/quiz/QuizCreateForm";
 import { fetchUser } from "@/lib/actions/user/fetchUser";
-import { auth } from "@clerk/nextjs/server";
 
 export default async function NewQuizPage() {
-  const {userId} = await auth();
-  if(!userId){
-    await auth.protect();
-    return;
-  }
-  
   // Ensure that user entry must be present in db.
-  const userData = await fetchUser(userId);
+  const userData = await fetchUser();
   if(!userData) return;
 
   return (

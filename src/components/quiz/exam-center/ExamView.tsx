@@ -10,7 +10,7 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
     const quiz:QuizTestType = quizTestData.quiz;
     const quizId = quiz.id;
     const attemptId = quizTestData.id;
-    const totalTime = quiz.totalTime *60 * 60 - 1;
+    const totalTime = quiz.totalTime *60 * 60;
 
     const [timeLeft,setTimeLeft] = useState(totalTime);
     const [currentIndex,setCurrentIndex] = useState(0);
