@@ -23,3 +23,13 @@ export type QuestionType = {
         text: string,
     }[];
 }
+
+type AnswerType = {
+    optionId?: string,
+    text?:string,
+    type:Question_Type,
+}
+
+export type AnswersType = {
+    [queId:string]:AnswerType
+}

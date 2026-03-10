@@ -33,9 +33,9 @@ export function buildQuizCreationPrompt(params:{
     }
 
     const context = pdfText
-    ? `You are given the following PDF text for the Topic- ${topic}. Create the quiz ONLY from this content, not from external knowledge.
+    ? `You are given the following PDF text for the Topic- ${topic}. Create the quiz ONLY from the context of this content, not from external knowledge. The quiz should be focused on the topics and concepts present in the PDF text and it should EXCLUDE other information like "Index of the pdf" or "Irrelevant content deviated from the topic and concepts from the pdf" etc.
     PDF Text:
-    """${pdfText.slice(0, 4000)}"""`
+    """${pdfText.slice(0, 10000)}"""`
     :`Topic: ${topic}
     Use only this topic in generating questions.`;
 

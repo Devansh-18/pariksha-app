@@ -1,22 +1,20 @@
 "use client"
 
 import { Question_Type } from "@/generated/prisma";
-import { ExamQuizDataType, QuizTestType } from "@/types/ExamTypes";
+import { AnswersType, ExamQuizDataType, QuizTestType } from "@/types/ExamTypes";
+import { formatTime } from "@/utils/formatTime";
 import { useEffect, useState } from "react";
 
 export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType}){
 
-    const [timeLeft,setTimeLeft] = useState(0);
-    const [currentIndex,setCurrentIndex] = useState(0);
-    const [answers,setAnswers] = useState<any>({});
-
     const quiz:QuizTestType = quizTestData.quiz;
     const quizId = quiz.id;
     const attemptId = quizTestData.id;
+    const totalTime = quiz.totalTime *60 * 60 - 1;
 
-    useEffect(()=>{
-        setTimeLeft(quiz.totalTime);
-    }, []);
+    const [timeLeft,setTimeLeft] = useState(totalTime);
+    const [currentIndex,setCurrentIndex] = useState(0);
+    const [answers,setAnswers] = useState<AnswersType>({});
 
     useEffect(()=>{
         if(timeLeft<=0) return;
@@ -31,11 +29,11 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
     const que = quiz.questions[currentIndex];
 
     function handleMCQ(optionId:string){
-        setAnswers({...answers,[que.id]:optionId}); // if same key, value will be replaced
+        setAnswers({...answers,[que.id]:{optionId:optionId,type:Question_Type.MCQ}}); // if same key, value will be replaced
     }
 
     function handleText(e:any){
-        setAnswers({...answers,[que.id]:e.target.value});
+        setAnswers({...answers,[que.id]:{text:e.target.value,type:Question_Type.SUBJECTIVE}});
     }
 
     function handleNext(){
@@ -51,9 +49,13 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
     }
 
     async function handleSubmit(){
+        const ansArr = Object.keys(answers).map((key)=>({
+            queId:key,
+            ...answers[key],
+        }));
         const res = await fetch(`/api/quiz/submit`,{
             method:'POST',
-            body:JSON.stringify({answers,attemptId,quizId}),
+            body:JSON.stringify({answers:ansArr,attemptId,quizId}),
             headers: {'Content-type':'application/json'},
         });
 
@@ -63,41 +65,50 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
     
 
     return (
-        <div>
-            <p>This is exam page</p>
-            {/* show time  */}
-            <span>{timeLeft}/{quiz.totalTime}</span>
+        <div className="text-black">
+            <div className="flex items-center justify-between bg-gray-700">
+                <p>This is exam page</p>
+                <div>Time left: {formatTime(timeLeft)}/{formatTime(totalTime)}</div>
+            </div>
             {/* show question number */}
-            <p>Que {currentIndex+1}: {que.que} </p>
-            {
-                que.type===Question_Type.MCQ && (
-                    <div>
-                        {que.options.map((option:any)=>(
-                            <label key={option.id}>
-                                <input
-                                type="radio"
-                                name={que.id}
-                                checked={answers[que.id]===option.id}
-                                onChange={()=>handleMCQ(option.id)}
-                                />
-                                {option.text}
-                            </label>
-                        ))}
-                    </div>
-                )
-            }
-            {
-                que.type === Question_Type.SUBJECTIVE && (
-                    <textarea
-                    placeholder="Type your answer here..."
-                    onChange={handleText}
-                    value = {answers[que.id] ?? ""}
-                    />
-                )
-            }
+            <div className="rounded-xl border-2 border-white bg-gray-600
+            text-black">
+                <p>Que {currentIndex+1}: {que.que} </p>
+                {
+                    que.type===Question_Type.MCQ && (
+                        <div>
+                            {que.options.map((option:any)=>(
+                                <label key={option.id}>
+                                    <input
+                                    type="radio"
+                                    name={que.id}
+                                    checked={answers[que.id]?.optionId===option.id}
+                                    onChange={()=>handleMCQ(option.id)}
+                                    />
+                                    {option.text}
+                                </label>
+                            ))}
+                        </div>
+                    )
+                }
+                {
+                    que.type === Question_Type.SUBJECTIVE && (
+                        <textarea
+                        placeholder="Type your answer here..."
+                        onChange={handleText}
+                        value = {answers[que.id]?.text ?? ""}
+                        />
+                    )
+                }
+            </div>
             {/* prev,next,submit buttons */}
-            <button onClick={handlePrev}>Prev</button>
-            <button onClick={handleNext}>Next</button>
+            <div className="flex items-center justify-between text-white">
+                <div className="flex items-center justify-center gap-4">
+                    <button onClick={handlePrev}>Prev</button>
+                    <button onClick={handleNext}>Next</button>
+                </div>
+                <button onClick={handleSubmit}>Submit</button>
+            </div>
         </div>
     )
 }

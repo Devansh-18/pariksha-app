@@ -19,7 +19,6 @@ export default async function examCenter({params}:{params : Promise<{id:string}>
     });
     
     const data:(ApiSuccessResponse | ApiErrorResponse) = await res.json();
-    console.log(data);
     
     if(!data || res.status===404){
         notFound();

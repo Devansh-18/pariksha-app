@@ -91,10 +91,11 @@ model UserAnswer {
   attempt    Attempt  @relation(fields: [attemptId], references: [id])
   queId      String
   que        Question @relation(fields:[queId], references:[id])
-  optionId   String?   @unique
+  optionId   String?
   option     Option?   @relation(fields:[optionId], references:[id])
   answerText String?
   @@unique([attemptId,queId])
+  @@unique([attemptId,queId,optionId]) // single correct option
 }
 
 

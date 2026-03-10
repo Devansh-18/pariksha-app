@@ -1,3 +1,4 @@
+import { Question_Type } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,7 +16,7 @@ export async function POST(req:NextRequest){
         }
 
         // require answers as array containing que id and selected option id or para text.
-        const {answers,attemptId,quizId} = await req.json();
+        const {answers,attemptId,quizId}:{answers:Array<{queId:string,optionId?:string,text?:string,type:Question_Type}>,attemptId:string,quizId:string} = await req.json();
         if(!answers || !attemptId || !quizId){
             return NextResponse.json({
                 success:false,
@@ -53,10 +54,10 @@ export async function POST(req:NextRequest){
         });
 
         for(const ans of answers){
-            const question = quiz?.questions?.find(id=>id===ans.queId);
+            const question = quiz?.questions?.find(que=>que.id===ans.queId);
             if(!question) continue;
-            if(question.type === "MCQ"){
-                const isThisCorrect = ans.optionId === question.options.find(op=>op.isCorrect===true);
+            if(question.type === Question_Type.MCQ){
+                const isThisCorrect = ans.optionId === question.options.find(op=>op.isCorrect===true)?.id;
 
                 if(isThisCorrect){
                     obtainedMarks += Number(question.marks);
@@ -70,7 +71,7 @@ export async function POST(req:NextRequest){
 
                 correctOptions.set(question.id,question.options.find(op=>op.isCorrect===true))
             }
-            else if(question.type==="SUBJECTIVE"){
+            else if(question.type===Question_Type.SUBJECTIVE){
                 result.push({
                     attemptId:attemptId,
                     queId:question.id,
