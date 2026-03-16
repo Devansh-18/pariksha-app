@@ -25,11 +25,11 @@ export async function POST(req:NextRequest){
             },{status:404});
         }
 
-        let correctOptions = new Map();
+        const correctOptions = new Map();
 
         let obtainedMarks = 0;
 
-        let result = [];
+        const result = [];
 
         const quiz = await prisma.quiz.findUnique({
             where:{

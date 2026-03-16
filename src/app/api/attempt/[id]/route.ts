@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+// import prisma from "@/lib/prisma";
+// import { auth } from "@clerk/nextjs/server";
+// import { NextRequest, NextResponse } from "next/server";
 
 // get attempted answers with given attempt id 
 // export async function GET(req:NextRequest,{params}:{params:Promise<{id:string}>}){

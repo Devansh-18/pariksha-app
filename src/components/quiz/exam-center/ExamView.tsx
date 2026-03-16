@@ -1,7 +1,7 @@
 "use client"
 
 import { Question_Type } from "@/generated/prisma";
-import { AnswersType, ExamQuizDataType, QuizTestType } from "@/types/ExamTypes";
+import { AnswersType, ExamQuizDataType, OptionType, QuizTestType } from "@/types/ExamTypes";
 import { formatTime } from "@/utils/formatTime";
 import { useEffect, useState } from "react";
 
@@ -32,7 +32,7 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
         setAnswers({...answers,[que.id]:{optionId:optionId,type:Question_Type.MCQ}}); // if same key, value will be replaced
     }
 
-    function handleText(e:any){
+    function handleText(e:React.ChangeEvent<HTMLTextAreaElement>){
         setAnswers({...answers,[que.id]:{text:e.target.value,type:Question_Type.SUBJECTIVE}});
     }
 
@@ -77,7 +77,7 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
                 {
                     que.type===Question_Type.MCQ && (
                         <div>
-                            {que.options.map((option:any)=>(
+                            {que.options.map((option:OptionType)=>(
                                 <label key={option.id}>
                                     <input
                                     type="radio"

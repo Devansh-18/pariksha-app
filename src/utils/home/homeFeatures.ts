@@ -1,4 +1,6 @@
-export const features = [
+import { FeatureType } from "@/types/HomeTypes";
+
+export const features:FeatureType[] = [
   {
     title: "From PDFs & Notes",
     description: "Upload study material and let QuizFlow instantly extract key concepts and build questions.",

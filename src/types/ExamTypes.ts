@@ -18,10 +18,12 @@ export type QuestionType = {
     type: Question_Type,
     que: string,
     marks: number,
-    options: {
-        id: string,
-        text: string,
-    }[];
+    options: OptionType[],
+}
+
+export type OptionType = {
+    id:string,
+    text:string,
 }
 
 type AnswerType = {

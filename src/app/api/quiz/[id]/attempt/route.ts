@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
 
 //create new attempt and fetch quiz for user.
 export async function POST(request:NextRequest,{ params }: { params: Promise<{ id: string }> }){

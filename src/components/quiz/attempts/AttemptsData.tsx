@@ -1,6 +1,6 @@
 type AttemptDataType = {
     id:string,
-    marksObtained:Number,
+    marksObtained:number,
     createdAt:Date
 }
 

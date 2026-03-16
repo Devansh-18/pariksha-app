@@ -1,4 +1,6 @@
-export const plans = [
+import { PlanType } from "@/types/HomeTypes";
+
+export const plans:PlanType[] = [
   {
     name: "Starter",
     price: "Free",

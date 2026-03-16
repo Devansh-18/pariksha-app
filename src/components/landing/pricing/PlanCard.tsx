@@ -1,8 +1,9 @@
 "use client";
 
+import { PlanType } from "@/types/HomeTypes";
 import {motion} from "framer-motion";
 
-export function PlanCard({plan,idx}:{plan:any,idx:number}){
+export function PlanCard({plan,idx}:{plan:PlanType,idx:number}){
     return(
         <motion.div
               key={plan.name}

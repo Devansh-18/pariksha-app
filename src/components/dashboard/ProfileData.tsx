@@ -1,5 +1,4 @@
 import { fetchUser } from "@/lib/actions/user/fetchUser";
-import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 
 export async function ProfileData(){

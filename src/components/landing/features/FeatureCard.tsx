@@ -1,8 +1,9 @@
 "use client"
 
+import { FeatureType } from "@/types/HomeTypes"
 import { motion } from "framer-motion"
 
-export function FeatureCard({feature,idx}:{feature:any,idx:number}){
+export function FeatureCard({feature,idx}:{feature:FeatureType,idx:number}){
     return(
         <motion.div
               key={feature.title}
