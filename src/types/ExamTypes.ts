@@ -26,7 +26,7 @@ export type OptionType = {
     text:string,
 }
 
-type AnswerType = {
+export type AnswerType = {
     optionId?: string,
     text?:string,
     type:Question_Type,

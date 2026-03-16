@@ -95,7 +95,7 @@ export default function QuizCreateForm() {
         return;
       }
 
-      const data = (await res.json()) as ApiSuccessResponse | ApiErrorResponse;
+      const data = (await res.json()) as ApiSuccessResponse<string> | ApiErrorResponse;
 
       if (!res.ok) {
         const err = data as ApiErrorResponse;
@@ -108,7 +108,7 @@ export default function QuizCreateForm() {
       }
 
 
-      const success = data as ApiSuccessResponse;
+      const success = data as ApiSuccessResponse<string>;
       setSuccessMessage(success.message || "Quiz created successfully!");
 
       router.push(`/dashboard/quizzes`);

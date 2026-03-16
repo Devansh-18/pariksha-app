@@ -15,13 +15,13 @@ export default async function ServerTestPage(){
             "Content-Type": "application/json",
         },
     });
-    const data:(ApiSuccessResponse | ApiErrorResponse) = (await res.json());
+    const data:(ApiSuccessResponse<{id:number,test:string}> | ApiErrorResponse) = (await res.json());
     console.log(data);
     if(!res || !res.ok || data.success===false){
         const err = data as ApiErrorResponse;
         throw new Error(err.message??"Server Error.");
     }
-    const successData = data as ApiSuccessResponse;
+    const successData = data as ApiSuccessResponse<{id:number,test:string}>;
     return(
         <div>
             <p>This is test page.</p>

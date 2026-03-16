@@ -125,7 +125,7 @@ export async function POST(request:NextRequest){
             return NextResponse.json({
                 success:true,
                 message:"Quiz created successfully",
-                data:createdQuiz, // only send id
+                data:createdQuiz.id, // only send id
             },{status:201});
             
         }

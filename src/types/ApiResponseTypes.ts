@@ -1,7 +1,7 @@
-export type ApiSuccessResponse = {
+export type ApiSuccessResponse<T> = {
   success: true;
   message: string;
-  data?: T;
+  data: T;
 };
 
 export type ApiErrorResponse = {

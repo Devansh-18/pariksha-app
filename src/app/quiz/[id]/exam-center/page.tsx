@@ -18,7 +18,7 @@ export default async function examCenter({params}:{params : Promise<{id:string}>
         },
     });
     
-    const data:(ApiSuccessResponse | ApiErrorResponse) = await res.json();
+    const data:(ApiSuccessResponse<ExamQuizDataType> | ApiErrorResponse) = await res.json();
     
     if(!data || res.status===404){
         notFound();
@@ -29,7 +29,7 @@ export default async function examCenter({params}:{params : Promise<{id:string}>
         throw new Error(err.message??"Server Error.");
     }
 
-    const successData = data as ApiSuccessResponse;
+    const successData = data as ApiSuccessResponse<ExamQuizDataType>;
         
     const quizTestData:ExamQuizDataType = successData.data;
 
