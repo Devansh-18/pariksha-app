@@ -23,8 +23,9 @@ export default async function QuizDataPage({params}:{params:Promise<{id:string}>
                     </div>
                 ):(
                 attempts.map((attempt)=>(
-                    <Link href={`/quiz/attempt/${attempt.id}`} key={attempt.id}>
-                        {attempt.marksObtained}
+                    <Link className="flex gap-5 items-center justify-start" href={`/quiz/attempt/${attempt.id}`} key={attempt.id}>
+                        <span>{attempt.createdAt.toISOString()}</span>
+                        <span>{attempt.marksObtained??0}</span>
                     </Link>
                 )))
             }

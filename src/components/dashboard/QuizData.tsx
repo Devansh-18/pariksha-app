@@ -17,7 +17,7 @@ export async function QuizData(){
         <div>
             <h1>This page shows all the quizzes given with marks and date on each quiz.</h1>
             {quizzes.map((quiz)=>(
-                <Link key = {quiz.id} href={`/quiz/${quiz.id}`}>
+                <Link className="block" key = {quiz.id} href={`/quiz/${quiz.id}`}>
                     <span>{quiz.title}</span>
                     <span>{quiz.totalTime}</span>
                     <span>{quiz.createdAt.toDateString()}</span>

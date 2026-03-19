@@ -3,10 +3,12 @@
 import { Question_Type } from "@/generated/prisma";
 import { AnswersType, ExamQuizDataType, OptionType, QuizTestType } from "@/types/ExamTypes";
 import { formatTime } from "@/utils/formatTime";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType}){
 
+    const router = useRouter();
     const quiz:QuizTestType = quizTestData.quiz;
     const quizId = quiz.id;
     const attemptId = quizTestData.id;
@@ -60,7 +62,9 @@ export default function ExamView({quizTestData}:{quizTestData:ExamQuizDataType})
         });
 
         const result = await res.json();
-        console.log(result);
+        if(result.success === true){
+            router.push(`/quiz/${quizId}`);
+        }
     }
     
 

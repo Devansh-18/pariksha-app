@@ -64,8 +64,8 @@ export async function fetchAttempt(attemptId:string){
             (null),
             userAnswer:
             que.type==="MCQ"?
-            attempt.answers?.find(queId=>queId.id===que.id)?.optionId : 
-            attempt.answers.find(queId=>queId.id===que.id)?.answerText,
+            attempt.answers?.find(ans=>ans.queId===que.id)?.optionId : 
+            attempt.answers.find(ans=>ans.queId===que.id)?.answerText,
         }));
 
         const evaluatedQuestions = questions?.map((q) => {
@@ -85,7 +85,7 @@ export async function fetchAttempt(attemptId:string){
                 return {
                     id: q.id,
                     que: q.que,
-                    marks: q.marks,
+                    marks: Number(q.marks),
                     type: q.type,
                     options: optionsWithStatus,
                     isUserCorrect,
@@ -96,9 +96,9 @@ export async function fetchAttempt(attemptId:string){
             attemptData = {
                 id: q.id,
                 que: q.que,
-                marks: q.marks,
+                marks: Number(q.marks),
                 type: q.type,
-                userAnswer: q.userAnswer ?? null,
+                userAnswer: q.userAnswer,
                 // enable this only if mcq
                 // isUserCorrect: q.userAnswer === q.correctAnswer
             };
@@ -107,12 +107,12 @@ export async function fetchAttempt(attemptId:string){
 
         return {
             attemptId,
-            marks:attempt?.marksObtained,
-            title:attempt?.quiz.title,
-            totalMarks:attempt?.quiz.totalMarks,
-            totalTime:attempt?.quiz.totalTime,
+            marks:attempt?.marksObtained??0,
+            title:attempt?.quiz?.title??"Quiz",
+            totalMarks:Number(attempt?.quiz.totalMarks)??0,
+            totalTime:attempt?.quiz.totalTime??0,
             createdAt:attempt?.createdAt,
-            answers:evaluatedQuestions,
+            answers:evaluatedQuestions??[],
         }
     }
     catch(err){
