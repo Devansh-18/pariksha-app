@@ -70,7 +70,6 @@ export async function POST(request:NextRequest){
                 },
 
             });
-            console.log(aiResponse.text);
             if(!aiResponse?.text){
                 return NextResponse.json({
                     success:false,
@@ -85,7 +84,7 @@ export async function POST(request:NextRequest){
                 title:quizAiData.title,
                 userId,
                 totalMarks,
-                totalTime:totalMarks===30?1:totalMarks===60?2:3,
+                totalTime:totalMarks===30?15:totalMarks===60?30:60,
                 questions:{
                     create: quizAiData.questions.map((q)=>({
                         que:q.que,
@@ -139,47 +138,3 @@ export async function POST(request:NextRequest){
             {status:500});
         }
 };
-
-//get all quiz for a user having userid.
-// export async function GET(){
-//     try{
-//         const {userId} = await auth();
-//         if(!userId){
-//             return NextResponse.json({
-//                 success:false,
-//                 message:"User is not authenticated.",
-//                 error:"Unauthenticated",
-//             },{status:401});
-//         }
-
-//         const quizzes = await prisma.quiz.findMany({
-//             where:{
-//                 userId,
-//             },
-//             orderBy:{
-//                 createdAt:"desc"
-//             },
-//             select:{
-//                 id:true,
-//                 createdAt:true,
-//                 title:true,
-//                 totalTime:true,
-//                 //marks can be viewed in attempt 
-//             }
-//         });
-//         return NextResponse.json({
-//             success:true,
-//             message:`All quiz fetched for user ${userId}`,
-//             data:{
-//                 quizzes,
-//             }
-//         },{status:200});
-//     }
-//     catch(err){
-//         return NextResponse.json({
-//             success:false,
-//             message:"Internal Server Error",
-//             error:err,
-//         },{status:500});
-//     }
-// };

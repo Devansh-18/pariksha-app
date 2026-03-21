@@ -3,6 +3,13 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+type ResultType = {
+    attemptId: string,
+    queId: string,
+    optionId?: string | null,
+    answerText?: string | null
+} 
+
 // submit user answer for an attempt and give result for mcq type 
 export async function POST(req:NextRequest){
     try{
@@ -16,7 +23,15 @@ export async function POST(req:NextRequest){
         }
 
         // require answers as array containing que id and selected option id or para text.
-        const {answers,attemptId,quizId}:{answers:Array<{queId:string,optionId?:string,text?:string,type:Question_Type}>,attemptId:string,quizId:string} = await req.json();
+        const { answers , attemptId , quizId } :
+        {answers : Array<{
+            queId : string,
+            optionId? : string,
+            text? : string,
+            type : Question_Type}>,
+        attemptId : string,
+        quizId : string} = await req.json();
+
         if(!answers || !attemptId || !quizId){
             return NextResponse.json({
                 success:false,
@@ -25,11 +40,25 @@ export async function POST(req:NextRequest){
             },{status:404});
         }
 
+        const createdAttempt = await prisma.attempt.findUnique({
+            where:{
+                id:attemptId,
+            }
+        });
+
+        if(!createdAttempt || createdAttempt.status!=="NOT_ATTEMPTED"){
+            return NextResponse.json({
+                success:false,
+                message:"Attempt not found or already attempted.",
+                error:"Attempt is not found or is already been attempted."
+            },{status:404});
+        }
+
         const correctOptions = new Map();
 
         let obtainedMarks = 0;
 
-        const result = [];
+        const result:ResultType[] = [];
 
         const quiz = await prisma.quiz.findUnique({
             where:{
@@ -80,19 +109,23 @@ export async function POST(req:NextRequest){
             }
         }
 
-        await prisma.userAnswer.createMany({
-            data:result
-        });
-
-        await prisma.attempt.update({
-            where:{
-                id:attemptId,
-                userId
-            },
-            data:{
-                status:"ATTEMPTED",
-                marksObtained:obtainedMarks,
-            }
+        await prisma.$transaction(async(tsx)=>{
+            
+            await tsx.userAnswer.createMany({
+                data:result
+            });
+    
+            await tsx.attempt.update({
+                where:{
+                    id:attemptId,
+                    userId,
+                    status:"NOT_ATTEMPTED",
+                },
+                data:{
+                    status:"ATTEMPTED",
+                    marksObtained:obtainedMarks,
+                }
+            });
         });
 
         const finalResult = result.map(r=>{

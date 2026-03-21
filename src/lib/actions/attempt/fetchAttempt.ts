@@ -68,28 +68,25 @@ export async function fetchAttempt(attemptId:string){
             attempt.answers.find(ans=>ans.queId===que.id)?.answerText,
         }));
 
+        let optionsWithStatus:{id: string,
+                            text: string,
+                            isCorrect: boolean,
+                            isSelectedByUser:boolean}[] | null = null;
+        let isUserCorrect:boolean|null = null; // null for subjective answers.
+
         const evaluatedQuestions = questions?.map((q) => {
             // MCQ handling
             if (q.type === "MCQ" && q.options) {
-                const optionsWithStatus = q.options.map((op) => ({
+                optionsWithStatus = q.options.map((op) => ({
                     id: op.id,
                     text: op.text,
                     isCorrect: op.isCorrect,
                     isSelectedByUser: q.userAnswer === op.id,
                 }));
 
-                const isUserCorrect = optionsWithStatus.some(
+                isUserCorrect = optionsWithStatus.some(
                     (op) => op.isCorrect && op.isSelectedByUser
                 );
-
-                return {
-                    id: q.id,
-                    que: q.que,
-                    marks: Number(q.marks),
-                    type: q.type,
-                    options: optionsWithStatus,
-                    isUserCorrect,
-                };
             }
 
             // Subjective / paragraph question
@@ -98,9 +95,9 @@ export async function fetchAttempt(attemptId:string){
                 que: q.que,
                 marks: Number(q.marks),
                 type: q.type,
+                options: optionsWithStatus,
+                isUserCorrect,
                 userAnswer: q.userAnswer,
-                // enable this only if mcq
-                // isUserCorrect: q.userAnswer === q.correctAnswer
             };
             return attemptData;
         });

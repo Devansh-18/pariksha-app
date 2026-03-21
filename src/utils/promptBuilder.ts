@@ -33,7 +33,7 @@ export function buildQuizCreationPrompt(params:{
     }
 
     const context = pdfText
-    ? `You are given the following PDF text for the Topic- ${topic}. Create the quiz ONLY from the context of this content, not from external knowledge. The quiz should be focused on the topics and concepts present in the PDF text and it should EXCLUDE other information like "Index of the pdf" or "Irrelevant content deviated from the topic and concepts from the pdf" etc.
+    ? `You are given the following PDF text for the Topic- ${topic}. Create the quiz ONLY from the context of this content, not from external knowledge. The quiz should be focused on the topics and concepts present in the PDF text and it should EXCLUDE other information like "Index of the pdf" or "Irrelevant content deviated from the topic and concepts from the pdf" etc. Also make sure to equally distribute quiz questions from each topics and concepts from the given PDF text.
     PDF Text:
     """${pdfText.slice(0, 10000)}"""`
     :`Topic: ${topic}
@@ -50,7 +50,7 @@ export function buildQuizCreationPrompt(params:{
     - MCQs: Exactly 4 options per question.
     - Each MCQ must have only one correct option (isCorrect: true).
     - SUBJECTIVE questions should NOT include answers or options, only the question text and marks.
-    - Keep all text concise (max 25 words for questions, 10 words for options).
+    - Keep all text concise (max 50 words for questions, 10 words for options).
     - Do not include explanations or any extra fields.
     - Do NOT include markdown, commentary, or backticks — output pure JSON.
 
