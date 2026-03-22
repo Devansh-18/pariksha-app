@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ApiErrorResponse, ApiSuccessResponse } from "@/types/ApiResponseTypes";
 import { QuizFormState } from "@/types/QuizTypes";
+import { uploadPdf } from "@/utils/uploadFileToBlob";
+import { allowedTypes } from "@/utils/uploadFormats";
 
 export default function QuizCreateForm() {
   const router = useRouter();
@@ -20,28 +22,32 @@ export default function QuizCreateForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  function handleChange(field: keyof QuizFormState){
-      return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const value =
+  function handleChange(field: keyof QuizFormState) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value =
         field === "totalMarks"
-        ? Number(e.target.value)
-        : field === "includeSubjective"
-        ? (e.target as HTMLInputElement).checked
-        : e.target.value;
-        
-        setForm((prev) => ({
-          ...prev,
-          [field]: value,
-        }));
-      };
+          ? Number(e.target.value)
+          : field === "includeSubjective"
+            ? (e.target as HTMLInputElement).checked
+            : e.target.value;
+
+      setForm((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>){
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
+    if (pdfFile && !allowedTypes.includes(pdfFile.type)) {
+      setErrorMessage("Unsupported file type.");
+      return;
+    }
     setPdfFile(file);
   };
 
-  async function handleSubmit(e: FormEvent){
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     setErrorMessage(null);
@@ -77,10 +83,10 @@ export default function QuizCreateForm() {
       }
 
       if (pdfFile) {
-        fd.append("pdf", pdfFile);
+        const url = await uploadPdf(pdfFile);
+        fd.append("pdfUrl", url);
       }
-
-      if (hasPdfUrl) {
+      else if (hasPdfUrl) {
         fd.append("pdfUrl", form.pdfUrl.trim());
       }
 
@@ -88,7 +94,6 @@ export default function QuizCreateForm() {
         method: "POST",
         body: fd,
       });
-      console.log("error");
 
       if (res.redirected) {
         router.push(res.url);

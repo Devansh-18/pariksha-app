@@ -27,10 +27,9 @@ export async function POST(request:NextRequest){
             const topic = (formData.get("topic")??"").toString().trim();
             const totalMarks = Number(formData.get("totalMarks"))??30;
             const includeSubjective = Boolean(formData.get("includeSubjective"))??false;
-            const pdf = formData.get("pdf");
-            const pdfUrl = formData.get("pdfUrl");
+            const pdfUrl = formData.get("pdfUrl") as string;
 
-            if(!topic && !pdf && !pdfUrl){
+            if(!topic && !pdfUrl){
                 return NextResponse.json({
                     success:false,
                     error:"No topic or pdf to create quiz.",
@@ -40,8 +39,8 @@ export async function POST(request:NextRequest){
 
 
             let pdfText = "";
-            if(pdf || pdfUrl){
-                pdfText = await pdfParser({pdf,pdfUrl});
+            if(pdfUrl){
+                pdfText = await pdfParser(pdfUrl);
                 // Validation
                 if (!pdfText.trim()) {
                     return NextResponse.json({ 
